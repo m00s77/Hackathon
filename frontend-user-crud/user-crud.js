@@ -2,6 +2,12 @@ $(document).ready(function() {
     populateUser(user);
     console.log(user);
     addFifty();
+
+    $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active');        
+    });
+
+
   });
 
 
@@ -10,6 +16,14 @@ var user = {
     name: "Zezao",
     balance: 100
 }
+
+var emptyUser = {
+    name : "",
+    balance : 100,
+    image : ""
+}
+
+
 
 
 function populateUser(user) {
@@ -40,5 +54,6 @@ function populateUser(user) {
     } )
 
  }
+
 
 
