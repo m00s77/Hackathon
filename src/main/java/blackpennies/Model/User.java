@@ -46,7 +46,7 @@ public class User {
     }
 
     public boolean canCredit(double amount) {
-        return amount < balance;
+        return amount <= balance;
     }
 
     public void addBalance(double amount){

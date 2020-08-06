@@ -31,11 +31,16 @@ public class CustomerService {
     }
 
     public boolean authenticate(User user) {
-        return customersMap.containsValue(user) && user.getPassword().equals(customersMap.get(user.getId()).getPassword());
+        for (User u: customersMap.values()) {
+            if(u.getNickname().equals(user.getNickname()) && u.getPassword().equals(user.getPassword())){
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<User> getAll(){
-        List<User> toReturn = new LinkedList<>(customersMap.values());
-        return toReturn;
+        return new LinkedList<>(customersMap.values());
     }
+
 }

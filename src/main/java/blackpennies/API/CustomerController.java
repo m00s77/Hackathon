@@ -38,7 +38,6 @@ public class CustomerController {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        user.setId(user.setID());
         customerService.addCustomer(user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -50,12 +49,12 @@ public class CustomerController {
 
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/authenticate")
-    public ResponseEntity<Boolean> authenticate(@RequestBody User user){
+    @RequestMapping(method = RequestMethod.POST, path = "/authenticate")
+    public ResponseEntity<?> authenticate(@RequestBody User user){
         if(customerService.authenticate(user)){
-            return new ResponseEntity<>(true,HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
-        return new ResponseEntity<>(false,HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/test")
@@ -68,9 +67,9 @@ public class CustomerController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, path = "/{id}/deposit")
-    public ResponseEntity<?> addBalance(@PathVariable Integer id, Double balance) {
+    public ResponseEntity<?> addBalance(@PathVariable Integer id, @RequestBody User user) {
        try {
-        customerService.getUser(id).addBalance(balance);
+        customerService.getUser(id).addBalance(user.getBalance());
        }
        catch (CustomerDoesNotExistException e){
            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -79,14 +78,15 @@ public class CustomerController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, path = "/{id}/withdraw")
-    public ResponseEntity<?> removeBalance(@PathVariable Integer id, Double balance){
+    public ResponseEntity<?> removeBalance(@PathVariable Integer id, @RequestBody User user){
         try {
-            if(!customerService.getUser(id).removeBalance(balance)){
+            if(!customerService.getUser(id).removeBalance(user.getBalance())){
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
         } catch (CustomerDoesNotExistException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
