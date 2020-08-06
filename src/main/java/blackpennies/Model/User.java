@@ -1,38 +1,76 @@
 package blackpennies.Model;
 
-import blackpennies.Exceptions.AccountHasBalanceException;
-
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
+import javax.validation.constraints.*;
+import java.net.URL;
 
 public class User {
 
     public static int globalId;
+
     private int id;
-    private String name;
+
+    private URL picture;
+
+    @NotNull(message = "Nickname is mandatory")
+    @NotBlank(message = "Nickname is mandatory")
+    @Size(min = 3, max = 64)
+    private String nickname;
+
+    @NotNull(message = "Password is mandatory")
+    @NotBlank(message = "Password is mandatory")
+    @Size(min = 3, max = 64)
     private String password;
+
+    @Email
+    @NotBlank(message = "Email is mandatory")
     private String email;
 
-    private Account account;
+
+    private double balance;
+
 
     public User(){
         id = setID();
-        account = new Account();
-        account.setUser(this);
     }
 
-    private int setID() {
+    public URL getPicture() {
+        return picture;
+    }
+
+    public void setPicture(URL picture) {
+        this.picture = picture;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public boolean canCredit(double amount) {
+        return amount < balance;
+    }
+
+    public void addBalance(double amount){
+        balance += amount;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    public boolean removeBalance(double amount) {
+        if(!canCredit(amount)){
+            return false;
+        }
+        balance -= amount;
+        return true;
+    }
+
+    public int setID() {
         return ++globalId;
     }
 
-    public void removeAccount() throws AccountHasBalanceException {
-        if(account.getBalance() > 0.0){
-            throw new AccountHasBalanceException("You still have money!");
-        }
-        account.setUser(null);
-        account = null;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getPassword() {
@@ -51,17 +89,14 @@ public class User {
         this.email = email;
     }
 
-    public String getName() {
-        return name;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
-    public Account getAccount() {
-        return account;
-    }
 
     public int getId() {
         return id;

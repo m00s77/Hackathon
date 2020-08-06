@@ -2,7 +2,6 @@ package blackpennies.Services;
 
 import blackpennies.Exceptions.CustomerDoesNotExistException;
 import blackpennies.Exceptions.NotEnoughBalanceException;
-import blackpennies.Model.Account;
 
 import blackpennies.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +17,6 @@ public class AccountService {
         this.customerService = customerService;
     }
 
-    public Account getAccount(Integer uid) throws CustomerDoesNotExistException {
-        return customerService.getUser(uid).getAccount();
-    }
 
 
     public void addBalance(Integer uid, double amount) throws CustomerDoesNotExistException {
@@ -28,8 +24,7 @@ public class AccountService {
             throw new CustomerDoesNotExistException("Customer does not exist");
         }
         User user = customerService.getUser(uid);
-        Account account = user.getAccount();
-        account.addBalance(amount);
+        user.addBalance(amount);
 
     }
 
@@ -40,12 +35,12 @@ public class AccountService {
         }
 
         User user = customerService.getUser(uid);
-        Account account = user.getAccount();
 
-        if(!account.removeBalance(amount)){
+
+        if(!user.removeBalance(amount)){
             throw new NotEnoughBalanceException("Not enough balance!");
         }
-        account.removeBalance(amount);
+        user.removeBalance(amount);
 
     }
 }

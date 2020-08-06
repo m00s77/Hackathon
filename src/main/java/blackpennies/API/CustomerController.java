@@ -7,7 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -22,22 +26,73 @@ public class CustomerController {
     }
 
 
-    @RequestMapping(method = RequestMethod.GET, path = "/details", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> getUserDetails() throws CustomerDoesNotExistException {
-        User user = new User();
-        user.setName("Derp");
-        user.setEmail("neheheh");
+    @RequestMapping(method = RequestMethod.GET, path = "{id}/details", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> getUserDetails(@PathVariable Integer id) throws CustomerDoesNotExistException {
+        User user = customerService.getUser(id);
         
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/add")
-    public ResponseEntity<?> addCustomer(){
-        User user = new User();
-        user.setName("Derp");
-        user.setEmail("neheheh");
+    public ResponseEntity<?> addCustomer(@Valid @RequestBody User user, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        user.setId(user.setID());
         customerService.addCustomer(user);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, path = "/{id}")
+    public ResponseEntity<User> deleteCustomer(@PathVariable Integer id){
+            customerService.removeCustomer(id);
+            return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/authenticate")
+    public ResponseEntity<Boolean> authenticate(@RequestBody User user){
+        if(customerService.authenticate(user)){
+            return new ResponseEntity<>(true,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(false,HttpStatus.UNAUTHORIZED);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/test")
+    public ResponseEntity<User> getAllUsers(){
+        User user = new User();
+        user.setEmail("teste");
+        user.setPassword("passtest");
+        user.setNickname("Nickname");
         return new ResponseEntity<>(user,HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/{id}/deposit")
+    public ResponseEntity<?> addBalance(@PathVariable Integer id, Double balance) {
+       try {
+        customerService.getUser(id).addBalance(balance);
+       }
+       catch (CustomerDoesNotExistException e){
+           return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+       }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/{id}/withdraw")
+    public ResponseEntity<?> removeBalance(@PathVariable Integer id, Double balance){
+        try {
+            if(!customerService.getUser(id).removeBalance(balance)){
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+        } catch (CustomerDoesNotExistException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/list")
+    public ResponseEntity<List<User>> listUsers(){
+        return new ResponseEntity<>(customerService.getAll(), HttpStatus.OK);
     }
 
 }
