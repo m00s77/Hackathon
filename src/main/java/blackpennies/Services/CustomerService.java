@@ -23,6 +23,15 @@ public class CustomerService {
         customersMap.remove(id);
     }
 
+    public User getUser(String name) throws CustomerDoesNotExistException {
+        for(User u: customersMap.values()) {
+            if(u.getNickname().equals(name)){
+                return u;
+            }
+        }
+        return null;
+    }
+
     public User getUser(Integer id) throws CustomerDoesNotExistException {
         if(customersMap.get(id) == null){
             throw new CustomerDoesNotExistException("Customer does not exist!");

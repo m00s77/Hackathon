@@ -34,7 +34,7 @@ public class CustomerController {
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/add")
-    public ResponseEntity<?> addCustomer(@Valid @RequestBody User user, BindingResult bindingResult){
+    public ResponseEntity<?> addCustomer(@RequestBody User user, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -51,8 +51,15 @@ public class CustomerController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/authenticate")
     public ResponseEntity<?> authenticate(@RequestBody User user){
+        User savedUser;
         if(customerService.authenticate(user)){
-            return new ResponseEntity<>(HttpStatus.OK);
+            try {
+                savedUser = customerService.getUser(user.getNickname());
+            }
+            catch (CustomerDoesNotExistException e){
+              return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>(savedUser,HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }

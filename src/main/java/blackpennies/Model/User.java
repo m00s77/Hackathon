@@ -2,6 +2,7 @@ package blackpennies.Model;
 
 import javax.validation.constraints.*;
 import java.net.URL;
+import java.text.DecimalFormat;
 
 public class User {
 
@@ -10,6 +11,7 @@ public class User {
     private int id;
 
     private URL picture;
+
 
     @NotNull(message = "Nickname is mandatory")
     @NotBlank(message = "Nickname is mandatory")
@@ -42,7 +44,7 @@ public class User {
     }
 
     public double getBalance() {
-        return balance;
+        return (double) Math.round(balance * 100d) /100d;
     }
 
     public boolean canCredit(double amount) {
