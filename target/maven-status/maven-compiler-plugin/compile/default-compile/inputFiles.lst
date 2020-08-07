@@ -5,5 +5,4 @@
 /Users/codecadet/Desktop/hackaton2020/hackathon2020/src/main/java/blackpennies/Log4jWebConfig.java
 /Users/codecadet/Desktop/hackaton2020/hackathon2020/src/main/java/blackpennies/API/CustomerController.java
 /Users/codecadet/Desktop/hackaton2020/hackathon2020/src/main/java/blackpennies/Services/AccountService.java
-/Users/codecadet/Desktop/hackaton2020/hackathon2020/src/main/java/blackpennies/Exceptions/AccountHasBalanceException.java
 /Users/codecadet/Desktop/hackaton2020/hackathon2020/src/main/java/blackpennies/Exceptions/CustomerDoesNotExistException.java

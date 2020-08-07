@@ -1,0 +1,39 @@
+.navbar-light{
+    background-color: rgb(72, 67, 104)
+}
+
+.navbar {
+    position: relative;
+    display: flex;
+}
+
+.navbar-brand {
+    position: absolute;
+    left: 50%;
+    margin-left: -100px !important;  /* 50% of your logo width */
+    display: block;
+
+
+}
+
+.btn-primary {
+    margin: 10px;
+}
+
+.nav-link {
+    color: white !important;
+}
+
+.navbar-brand {
+    color: white !important;
+}
+
+.wrapper {
+    display: flex;
+    align-items: stretch;
+}
+
+#classedemerda{
+    display: flex;
+justify-self: flex-end;
+}

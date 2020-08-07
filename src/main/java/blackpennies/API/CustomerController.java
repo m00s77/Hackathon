@@ -38,6 +38,16 @@ public class CustomerController {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        try {
+            if(customerService.getUser(user.getNickname()) != null){
+                return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+            }
+            if(customerService.getUserByEmail(user.getEmail()) != null){
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
+        }catch (CustomerDoesNotExistException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         customerService.addCustomer(user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -51,8 +61,15 @@ public class CustomerController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/authenticate")
     public ResponseEntity<?> authenticate(@RequestBody User user){
+        User savedUser;
         if(customerService.authenticate(user)){
-            return new ResponseEntity<>(HttpStatus.OK);
+            try {
+                savedUser = customerService.getUser(user.getNickname());
+            }
+            catch (CustomerDoesNotExistException e){
+              return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>(savedUser,HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
