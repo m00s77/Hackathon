@@ -1,0 +1,240 @@
+<html>
+<head>
+    <title>HTML5 Canvas Winning Wheel</title>
+        <link rel="stylesheet" href="main.css" type="text/css" />
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css"
+          integrity="sha384-VCmXjywReHh4PwowAiWNagnWcLhlEJLA5buUprzK8rxFgeH0kww/aWY76TfkUoSX" crossorigin="anonymous">
+    <script type="text/javascript" src="Winwheel.js"></script>
+</head>
+<body>
+<div align="center">
+    <p>Choose a power setting then press the Spin button to test your luck.</p>
+    <br />
+    <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+            <td>
+                <div class="power_controls">
+                    <br />
+                    <br />
+                    <table class="power" cellpadding="10" cellspacing="0">
+                        <tr>
+                            <th align="center">Power</th>
+                        </tr>
+                        <tr>
+                            <td width="78" align="center" id="pw3" onClick="powerSelected(3);">High</td>
+                        </tr>
+                        <tr>
+                            <td align="center" id="pw2" onClick="powerSelected(2);">Med</td>
+                        </tr>
+                        <tr>
+                            <td align="center" id="pw1" onClick="powerSelected(1);">Low</td>
+                        </tr>
+                    </table>
+                    <br />
+                    <img id="spin_button" class="button" src="spin_on.png" alt="Spin" />
+                    <br /><br />
+                    &nbsp;&nbsp;<a href="#" onClick="resetWheel(); return false;">Play Again</a><br />
+                </div>
+            </td>
+            <td width="421" height="564" class="the_wheel" align="center" valign="center">
+                <canvas id="canvas" width="420" height="420">
+                </canvas>
+            </td>
+        </tr>
+    </table>
+</div>
+<script>
+    // Create new wheel object specifying the parameters at creation time.
+    let theWheel = new Winwheel({
+        'numSegments': 8,                 // Specify number of segments.
+        'outerRadius': 200,               // Set outer radius so wheel fits inside the background.
+        'drawText': true,              // Code drawn text can be used with segment images.
+        'textFontSize': 22,
+        'textOrientation': 'curved',
+        'textAlignment': 'inner',
+        'textMargin': 120,
+        'textFontFamily': 'monospace',
+        'textStrokeStyle': 'black',
+        'textLineWidth': 3,
+        'textFillStyle': 'white',
+        'drawMode': 'segmentImage',    // Must be segmentImage to draw wheel using one image per segemnt.
+        'segments':                    // Define segments including image and text.
+            [
+                { 'image': 'black.png', 'text': 'TRY\nAGAIN' },
+                { 'image': 'yellow.png', 'text': 'YOU\nWON' },
+                { 'image': 'blue.png', 'text': 'IDIOT' },
+                { 'image': 'brown.png', 'text': 'NOPE' },
+                { 'image': 'purple.png', 'text': 'SHAME' },
+                { 'image': 'green.png', 'text': 'LOSER' },
+                { 'image': 'red.png', 'text': 'YOU\nSUCK' },
+                { 'image': 'pink.png', 'text': 'LOSER' }
+            ],
+        'animation':           // Specify the animation to use.
+            {
+                'type': 'spinToStop',
+                'duration': 5,     // Duration in seconds.
+                'spins': 8,     // Number of complete spins.
+                'callbackFinished': alertPrize,
+                'callbackSound': playSound,   // Function to call when the tick sound is to be triggered.
+                'soundTrigger': 'pin'
+            },
+        'pins':
+            {
+                'number': 16   // Number of pins. They space evenly around the wheel.
+            }
+    });
+    let audio = new Audio('tick.mp3');
+    function playSound() {
+        // Stop and rewind the sound if it already happens to be playing.
+        audio.pause();
+        audio.currentTime = 0;
+        // Play the sound.
+        audio.play();
+    }
+    $(function () {
+        $(".button").click(havemoney);
+    });
+    function havemoney() {
+        $.ajax({
+            type: 'GET',
+            url: "http://192.168.2.24:8080/BlackPennies/user/" + hash  + "/details",
+            async: true,
+            contentType: 'application/json',
+            success: function (data) {
+                if (data.balance >= "1.00") {
+                    withdraw();
+                } else{
+                    alert("no money mothafocker!!")
+                }
+            },
+            error: function (xhr, ajaxOptions, throwError) {
+            },
+        });
+    }
+
+    var hash = location.hash.substr(1);
+    function withdraw() {
+        $.ajax({
+            type: 'PUT',
+            url: "http://192.168.2.24:8080/BlackPennies/user/" + hash + "/withdraw",
+            data: JSON.stringify({
+                balance: "1.00"
+            }),
+            async: true,
+            contentType: 'application/json',
+            success: function () {
+                startSpin();
+            },
+            error: function (xhr, ajaxOptions, throwError) {
+            },
+        });
+    }
+    function deposit() {
+        $.ajax({
+            type: 'PUT',
+            url: "http://192.168.2.24:8080/BlackPennies/user/" + hash + "deposit",
+            data: JSON.stringify({
+                balance: "10.00"
+            }),
+            async: true,
+            contentType: 'application/json',
+            success: function () {
+            },
+            error: function (xhr, ajaxOptions, throwError) {
+                alert(throwError);
+            },
+        });
+    }
+    // Vars used by the code in this page to do power controls.
+    let wheelPower = 0;
+    let wheelSpinning = false;
+    // -------------------------------------------------------
+    // Function to handle the onClick on the power buttons.
+    // -------------------------------------------------------
+    function powerSelected(powerLevel) {
+        // Ensure that power can't be changed while wheel is spinning.
+        if (wheelSpinning == false) {
+            // Reset all to grey incase this is not the first time the user has selected the power.
+            document.getElementById('pw1').className = "";
+            document.getElementById('pw2').className = "";
+            document.getElementById('pw3').className = "";
+            // Now light up all cells below-and-including the one selected by changing the class.
+            if (powerLevel >= 1) {
+                document.getElementById('pw1').className = "pw1";
+            }
+            if (powerLevel >= 2) {
+                document.getElementById('pw2').className = "pw2";
+            }
+            if (powerLevel >= 3) {
+                document.getElementById('pw3').className = "pw3";
+            }
+            // Set wheelPower var used when spin button is clicked.
+            wheelPower = powerLevel;
+            // Light up the spin button by changing it's source image and adding a clickable class to it.
+            document.getElementById('spin_button').src = "spin_on.png";
+            document.getElementById('spin_button').className = "clickable";
+        }
+    }
+    // -------------------------------------------------------
+    // Click handler for spin button.
+    // -------------------------------------------------------
+    function startSpin() {
+        // Ensure that spinning can't be clicked again while already running.
+        if (wheelSpinning == false) {
+            // Based on the power level selected adjust the number of spins for the wheel, the more times is has
+            // to rotate with the duration of the animation the quicker the wheel spins.
+            if (wheelPower == 1) {
+                theWheel.animation.spins = 3;
+            } else if (wheelPower == 2) {
+                theWheel.animation.spins = 8;
+            } else if (wheelPower == 3) {
+                theWheel.animation.spins = 15;
+            }
+            // Disable the spin button so can't click again while wheel is spinning.
+            document.getElementById('spin_button').src = "spin_on.png";
+            document.getElementById('spin_button').className = "";
+            // Begin the spin animation by calling startAnimation on the wheel object.
+            theWheel.startAnimation();
+            // Set to true so that power can't be changed and spin button re-enabled during
+            // the current animation. The user will have to reset before spinning again.
+            wheelSpinning = true;
+        }
+    }
+    // -------------------------------------------------------
+    // Function for reset button.
+    // -------------------------------------------------------
+    function resetWheel() {
+        theWheel.stopAnimation(false);  // Stop the animation, false as param so does not call callback function.
+        theWheel.rotationAngle = Math.random() * 3600;     // Re-set the wheel angle to 0 degrees.
+        theWheel.draw();                // Call draw to render changes to the wheel.
+        document.getElementById('pw1').className = "";  // Remove all colours from the power level indicators.
+        document.getElementById('pw2').className = "";
+        document.getElementById('pw3').className = "";
+        wheelSpinning = false;          // Reset to false to power buttons and spin can be clicked again.
+    }
+    // -------------------------------------------------------
+    // Called when the spin animation has finished by the callback feature of the wheel because I specified callback in the parameters.
+    // note the indicated segment is passed in as a parmeter as 99% of the time you will want to know this to inform the user of their prize.
+    // -------------------------------------------------------
+    function alertPrize(indicatedSegment) {
+        var msg = '';
+        if (indicatedSegment.text === 'YOU\nWON') {
+            msg = 'Boaaaaaa';
+            deposit();
+        } else {
+            msg = "You lost, idiot!";
+        }
+        // Do basic alert of the segment text. You would probably want to do something more interesting with this information.
+        alert(msg);
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/js/bootstrap.min.js"
+        integrity="sha384-XEerZL0cuoUbHE4nZReLT7nx9gQrQreJekYhJD9WNWhH8nEW+0c5qq7aIo2Wl30J"
+        crossorigin="anonymous"></script>
+</body>
+</html>

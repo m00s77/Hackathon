@@ -17,7 +17,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     
         <!-- js imports -->
-        <script src="user-crud.js"> </script>
+      <script src="user-crud.js"> </script>
+
 
         <title>Landing page</title>
   </head>
@@ -43,7 +44,7 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalLoginForm" >Welcome!</button>
-          <ul>
+          </ul>
       </div>
     </nav>
 
@@ -57,7 +58,12 @@
                   <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Games</a>
                   <ul class="collapse list-unstyled" id="homeSubmenu">
                       <li>
-                          <a href="#">Game 1</a>
+                          <a onclick="f()">Game 1</a>
+                          <script> var hash = location.hash.substr(1);
+                          function f() {
+                            window.location.href = "roulette/index.html#" + hash;
+                          }</script>
+
                       </li>
                       <li>
                           <a href="#">Game 2</a>
@@ -139,8 +145,7 @@
     
     })()
  </script>
-    
-
-
+  </div>
+  </div>
   </body>
 </html>

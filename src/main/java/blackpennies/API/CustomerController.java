@@ -34,8 +34,18 @@ public class CustomerController {
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/add")
-    public ResponseEntity<?> addCustomer(@RequestBody User user, BindingResult bindingResult){
+    public ResponseEntity<?> addCustomer(@Valid @RequestBody User user, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        try {
+            if(customerService.getUser(user.getNickname()) != null){
+                return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+            }
+            if(customerService.getUserByEmail(user.getEmail()) != null){
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
+        }catch (CustomerDoesNotExistException e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         customerService.addCustomer(user);

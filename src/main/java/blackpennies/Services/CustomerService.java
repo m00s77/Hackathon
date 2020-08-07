@@ -32,6 +32,15 @@ public class CustomerService {
         return null;
     }
 
+    public User getUserByEmail(String email) throws CustomerDoesNotExistException {
+        for(User u: customersMap.values()) {
+            if(u.getEmail().equals(email)){
+                return u;
+            }
+        }
+        return null;
+    }
+
     public User getUser(Integer id) throws CustomerDoesNotExistException {
         if(customersMap.get(id) == null){
             throw new CustomerDoesNotExistException("Customer does not exist!");

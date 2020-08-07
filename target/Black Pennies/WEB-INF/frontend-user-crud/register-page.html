@@ -5,22 +5,21 @@
 		<title>Register</title>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
 		<link rel="stylesheet" href="register-page.css">
+
 		<!-- jquery imports -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 		<!-- js imports -->
 		<script src="register-page-js.js"> </script>
 
-
 	</head>
 	<body>
 		<div class="register">
 			<h1>Register</h1>
-			<div id="form-messages"></div>
-			<form name= "register-form" id="register-form" action="http://192.168.2.24:8080/BlackPennies/user/add" method="post" autocomplete="off">
-				<label for="nickname">
+			<form id="register-form" method="post" autocomplete="off">
+				<label for="username">
 					<i class="fas fa-user"></i>
 				</label>
-				<input type="text" name="nickname" placeholder="Nickname" id="nickname" required>
+				<input type="text" name="username" placeholder="Nickname" id="nickname" required>
 				<label for="password">
 					<i class="fas fa-lock"></i>
 				</label>
@@ -29,7 +28,7 @@
 					<i class="fas fa-envelope"></i>
 				</label>
 				<input type="email" name="email" placeholder="Email" id="email" required>
-                <input id ="button" type="submit" value="Register">
+                <input id="button1" class="button" onclick="location.href = 'https://www.google.com'"  type="submit" value="Register">
 			</form>
 		</div>
 	</body>
