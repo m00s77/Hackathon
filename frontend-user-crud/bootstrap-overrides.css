@@ -1,5 +1,5 @@
 .navbar-light{
-    background-color: rgb(72, 67, 104)
+    background-color: black;
 }
 
 .navbar {
@@ -17,6 +17,9 @@
 
 .btn-primary {
     margin: 10px;
+    background-color: hotpink !important;
+    border-color: hotpink;
+    color: white !important;
 }
 
 .nav-link {
@@ -30,4 +33,17 @@
 .wrapper {
     display: flex;
     align-items: stretch;
+}
+
+.card {
+
+    margin: 10px;
+    height: 800px;
+    width: 500px !important;
+
+} 
+
+.btn-info {
+    background-color: hotpink;
+    border-color: hotpink;
 }

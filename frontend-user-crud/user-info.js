@@ -6,7 +6,7 @@ function onSuccess(response) {
 }
 
 function errorCallback(request, status, xhr) {
-    alert("Please create a valid user!");
+    alert("Please create a valid userlidate your data!");
     $("#nickname").val("");
     $("#password").val("");
     $("#email").val("");

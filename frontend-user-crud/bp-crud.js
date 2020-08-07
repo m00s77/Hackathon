@@ -71,11 +71,11 @@ $.ajax({
    
 //get user data authenticated
 $.ajax({
-    url: 'http://192.168.2.24:8080/BlackPennies/user/list',
+    url: 'http://192.168.2.24:8080/BlackPennies/user/authenticate',
+    type: 'POST',
     data: JSON.stringify({
         nickname: 'ruizinho',
         password: btoa('ferraozinho'),
-        email: 'ruizinho.ferraozinho@academiadecodigo.org'
     }),
     async: true,
     contentType: 'application/json',

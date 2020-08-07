@@ -1,59 +1,40 @@
 $(document).ready(function() {
-    populateUser(user);
-    console.log(user);
-    addFifty();
 
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');        
     });
-
-
   });
 
 
-var user = {
-    id: 1,
-    name: "Zezao",
-    balance: 100
-}
+function onSuccess(response) {
 
-var emptyUser = {
-    name : "",
-    balance : 100,
-    image : ""
+    var id = response.id;
+    window.location.href = "landing-page-logged.html#" + id;
+
 }
 
 
+function errorCallback(request, status, error) {
 
+    alert("Please insert a valid username and password.")
 
-function populateUser(user) {
+}
 
-    var userTable = $('#user-table');
-  
-      var str;
-  
-  
-      str = "<tr> <td>" + user.id + "</td>" +
-            "<td>" + user.name + "</td>" +
-            "<td id ='user-balance'>" + user.balance + "</td> </tr>"
+$(function () {
+    $("#login-button").click(function(event) {
+        event.preventDefault();
+        $.ajax({
+            url: "http://192.168.2.24:8080/BlackPennies/user/authenticate",
+            type: "POST",
+            data: JSON.stringify({
+                nickname: $("#defaultForm-nickname").val(),
+                password: $("#defaultForm-pass").val(),
+            }),
+            async: true,
+            contentType: "application/json; charset=utf-8",
+            success: onSuccess,
+            error: errorCallback
 
-
-      
-      $(str).appendTo(userTable);
-  
- }
-
- function addFifty() {
-
-    $('#button').click(function () {
-        user.balance += 50;
-        //populateUser(user);
-        console.log(user.balance);
-        $('#user-balance').text(user.balance);
-
-    } )
-
- }
-
-
-
+        });
+    })
+});
