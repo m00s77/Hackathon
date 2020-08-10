@@ -1,12 +1,13 @@
 
 function onSuccess(response) {
-
+    window.location.href = "home.html"
 }
 
 function errorCallback(request, status, error) {
-
-    console.log(error);
-
+    alert("Please create a valid user!");
+    $("#nickname").val("");
+    $("#password").val("");
+    $("#email").val("");
 }
 
 $(function () {

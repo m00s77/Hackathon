@@ -54,22 +54,7 @@ function start(){
 
     var uName = "ruizinho";
     var passwrd = "ferraozinho"
-/*    
-//get user
-$.ajax({
-    url: 'http://192.168.2.24:8080/BlackPennies/user/list',
-    async: true,
-    success: successCallback,
-    error: errorCallback
-});
-*/
 
-
-
-
-
-   
-//get user data authenticated
 $.ajax({
     url: 'http://192.168.2.24:8080/BlackPennies/user/authenticate',
     type: 'POST',
@@ -82,37 +67,6 @@ $.ajax({
     success: successCallback,
     error: errorCallback
 });
-
-
-
-/*
-//delete user
-$.ajax({
-    url: 'http://192.168.2.24:8080/BlackPennies/user/2',
-    type: 'DELETE',
-    async: true,
-    success: onSucess,
-    error: errorCallback
-});
-*/
-
-
-/*
-//update user ** ver codigo da gess/vitor
-$.ajax({
-    url: 'http://192.168.2.24:8080/BlackPennies/user/6/deposit',
-    type: 'PUT',
-    data: JSON.stringify({
-        balance: '10.0',
-    }),
-    async: true,
-    contentType: 'application/json',
-    success: onSucess,
-    error: errorCallback
-});
-*/
-
-
 
 
 

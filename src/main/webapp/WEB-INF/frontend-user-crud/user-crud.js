@@ -9,7 +9,7 @@ $(document).ready(function() {
 function onSuccess(response) {
 
     var id = response.id;
-    window.location.href = "landing-page-logged.html#" + id;
+    window.location.href = "home..html#" + id;
 
 }
 

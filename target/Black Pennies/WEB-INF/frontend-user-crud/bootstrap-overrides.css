@@ -12,11 +12,14 @@
     margin-left: -100px !important;  /* 50% of your logo width */
     display: block;
 
-
 }
+
 
 .btn-primary {
     margin: 10px;
+    background-color: hotpink !important;
+    border-color: hotpink;
+    color: white !important;
 }
 
 .nav-link {
@@ -44,5 +47,3 @@
     background-color: hotpink;
     border-color: hotpink;
 }
-
-

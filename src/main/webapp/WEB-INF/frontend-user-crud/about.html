@@ -26,7 +26,7 @@
     <!-- js imports -->
     <script src="user-crud.js"></script>
 
-    <title>Landing page</title>
+    <title>About</title>
 </head>
 <body>
 
@@ -40,7 +40,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="landing-page-unlogged.html">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="home.html">Home <span class="sr-only">(current)</span></a>
             </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
@@ -62,7 +62,11 @@
                 <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Games</a>
                 <ul class="collapse list-unstyled" id="homeSubmenu">
                     <li>
-                        <a href="roulette/show.html">Game 1</a>
+                        <a onclick="f()">Game 1</a>
+                        <script>function f() {
+                            alert("Please login first!")
+                        }
+                        </script>
                     </li>
                     <li>
                         <a href="#">Game 2</a>
@@ -76,12 +80,6 @@
                 <a href="about.html">About</a>
             </li>
             <li>
-            <li>
-                <a href="#">Blog</a>
-            </li>
-            <li>
-                <a href="#">Contacts</a>
-            </li>
         </ul>
     </nav>
 
@@ -117,10 +115,33 @@
         </div>
     </div>
 </div>
+
+<!-- login popup funcitonality -->
+
+<div class="modal fade" id="modalLoginForm"  role="dialog" 
+aria-hidden="true">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header text-center">
+      <h4 class="modal-title w-100 font-weight-bold">Login</h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body mx-3">
+      <div class="md-form mb-5">
+        <input type="text" id="defaultForm-nickname" class="form-control validate" placeholder="Nickname">
+      </div>
+      <div class="md-form mb-4">
+        <input type="password" id="defaultForm-pass" class="form-control validate" placeholder="Password">
+        <label data-error="wrong" data-success="right" for="defaultForm-pass"></label>
+      </div>
+    </div>
+    <div class="modal-footer d-flex justify-content-center">
+      <button id="login-button" type="button" class="btn btn-primary btn-lg btn-block" data-dismiss="modal">Login</button>
+    </div>
+  </div>
+</div>
+</div>
 </body>
-<p>
-
-</p>
-
-
 </html>
